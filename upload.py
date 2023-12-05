@@ -14,7 +14,7 @@ def app():
             
             #get s3 pregisned url
             if file is not None:
-                api_base_url = "https://o38ehtiqc5.execute-api.ap-northeast-1.amazonaws.com/prod/files"
+                api_base_url = "https://i52vmx81j2.execute-api.ap-northeast-1.amazonaws.com/prod/url"
                 api_url = "{}?upload={}".format(api_base_url, file.name)
                 print(api_url)
                 response = requests.post(api_url)
@@ -36,6 +36,7 @@ def app():
                     "type": file.type
                 }
                 
+                api_base_url = "https://i52vmx81j2.execute-api.ap-northeast-1.amazonaws.com/prod/files"
                 #send metadata to dynamodb
                 api_url = "{}?metadata={}".format(api_base_url, json.dumps(metadata))
                 print(api_url)
