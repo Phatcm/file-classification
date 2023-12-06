@@ -130,5 +130,35 @@ def lambda_handler(event, context):
                 'body': json.dumps({'error': str(e)})
             }
     
+    if httpMethod == "DELETE" and path == "/files":
+        try: 
+            object = event['queryStringParameters']['delete']
+            metadata = json.loads(object)
+            file_name = metadata['name']
+            file_type = metadata['type']
+            key = f"{file_type}/{file_name}"
+            print(key)
+            
+            bucket_name = "s3-organize-file"
+            table_name = dynamodb.Table('FilesMetadata')
+            #delete in s3:
+            s3_client.delete_object(Bucket=bucket_name, Key=key) 
+            #delete in dynamodb:
+            table_name.delete_item(
+                Key={
+                    "FileName": file_name,
+                    "FileType": file_type
+                }
+            )
+            return {
+                'statusCode': 200,
+                'body': json.dumps("Delete Sucessfully")
+            }
+        except Exception as e:
+            return {
+                'statusCode': 500,
+                'body': json.dumps({'error': str(e)})
+            }
+
     
     
