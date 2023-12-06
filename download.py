@@ -33,7 +33,6 @@ def app():
             if response.status_code == 200:
                 presigned_url = json.loads(response.text)
                 st.markdown(f'<a href="{presigned_url}" download="{file_name}">Click here to download {file_name}</a>', unsafe_allow_html=True)
-                st.toast(f"Download file '{item_name}' sucessfully")
             else:
                 st.write("Failed to retrieve presigned URL")
     
