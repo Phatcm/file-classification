@@ -33,9 +33,11 @@ def app():
             if response.status_code == 200:
                 response_result = json.loads(response.text)
                 presigned_url = response_result
-                trigger = trigger_download(presigned_url, item_name)
-                #Call triger html method to download using presigned url:
-                components.html(html=trigger, height=0, width=0)
+                # trigger = trigger_download(presigned_url, item_name)
+                # #Call triger html method to download using presigned url:
+                # components.html(html=trigger, height=0, width=0)
+                
+                download_file(response, item_name)
                 st.toast(f"Download file '{item_name}' sucessfully")
             else:
                 st.write("Failed to retrieve presigned URL")
@@ -46,20 +48,20 @@ def download_url(api_base_url, file_name):
     
     return response
     
-def trigger_download(url, item_name):
-    dl_link = f"""
-                    <html>
-                    <head>
-                    <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
-                    <script>
-                    $('<a href="{url}" download="{item_name}">')[0].click()
-                    </script>
-                    </head>
-                    </html>"""
+# def trigger_download(url, item_name):
+#     dl_link = f"""
+#                     <html>
+#                     <head>
+#                     <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+#                     <script>
+#                     $('<a href="{url}" download="{item_name}">')[0].click()
+#                     </script>
+#                     </head>
+#                     </html>"""
                     
-    return dl_link
+#     return dl_link
 
-def callback_button() -> None:
-    trigger = trigger_download(figs2zip([fig1, fig2]), "plots.zip")
-    components.html(html=trigger, height=0, width=0)
-    return
+def download_file(url, file_name):
+    with open(file_name, 'wb') as f:
+        f.write(url.content)
+    st.write(f"File '{file_name}' downloaded successfully")
