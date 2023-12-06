@@ -25,7 +25,7 @@ class MultiApp:
                 options=['Upload','Download','Delete'],
                 icons=['upload','download','gear'],
                 menu_icon='cast',
-                default_index=1,
+                default_index=0,
                 styles={
                     "container": {"padding": "5!important"},
                     "icon": {"font-size": "15px"}, 

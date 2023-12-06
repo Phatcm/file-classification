@@ -31,13 +31,8 @@ def app():
             api_base_url = "https://i52vmx81j2.execute-api.ap-northeast-1.amazonaws.com/prod/url"
             response = download_url(api_base_url, file_name)
             if response.status_code == 200:
-                response_result = json.loads(response.text)
-                presigned_url = response_result
-                # trigger = trigger_download(presigned_url, item_name)
-                # #Call triger html method to download using presigned url:
-                # components.html(html=trigger, height=0, width=0)
-                
-                download_file(response, item_name)
+                presigned_url = json.loads(response.text)
+                st.markdown(f'<a href="{presigned_url}" download="{file_name}">Click here to download {file_name}</a>', unsafe_allow_html=True)
                 st.toast(f"Download file '{item_name}' sucessfully")
             else:
                 st.write("Failed to retrieve presigned URL")
@@ -47,21 +42,3 @@ def download_url(api_base_url, file_name):
     response = requests.get(download_url)
     
     return response
-    
-# def trigger_download(url, item_name):
-#     dl_link = f"""
-#                     <html>
-#                     <head>
-#                     <script src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
-#                     <script>
-#                     $('<a href="{url}" download="{item_name}">')[0].click()
-#                     </script>
-#                     </head>
-#                     </html>"""
-                    
-#     return dl_link
-
-def download_file(url, file_name):
-    with open(file_name, 'wb') as f:
-        f.write(url.content)
-    st.write(f"File '{file_name}' downloaded successfully")
