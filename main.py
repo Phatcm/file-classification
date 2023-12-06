@@ -23,7 +23,7 @@ class MultiApp:
             app = option_menu(
                 menu_title='Navigator ',
                 options=['Upload','Download','Delete'],
-                icons=['upload','download','gear'],
+                icons=['cloud-arrow-up','cloud-arrow-down','cloud-minus'],
                 menu_icon='cast',
                 default_index=0,
                 styles={
