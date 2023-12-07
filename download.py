@@ -3,6 +3,7 @@ import requests
 import json
 import time
 import pandas as pd
+import webbrowser 
 
 def app():
     api_base_file = "https://i52vmx81j2.execute-api.ap-northeast-1.amazonaws.com/prod/files"
@@ -50,7 +51,7 @@ def list_item(api_base_file, i, item_name, item_type, file_name):
         response = download_url(api_base_url, file_name)
         if response.status_code == 200:
             presigned_url = json.loads(response.text)
-            st.markdown(f'<a href="{presigned_url}" download="{file_name}">Click here to download {file_name}</a>', unsafe_allow_html=True)
+            webbrowser.open(presigned_url, new=0, autoraise=True)
         else:
             st.write("Failed to retrieve presigned URL")
     if col5.button("Delete", item_name+"1", type="primary"):

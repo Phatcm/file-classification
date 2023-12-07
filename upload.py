@@ -22,6 +22,8 @@ def app():
             if response.status_code == 200:
                 response_result=json.loads(response.text)  # Access the presigned URL directly from the response body
                 #st.write("S3 Presigned URL:", response_result)
+            else:
+                st.write("Can't get the s3 presigned url")
             
             #send files through presigned url
             files = {'file': file}
