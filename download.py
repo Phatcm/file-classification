@@ -4,6 +4,7 @@ import json
 import time
 import pandas as pd
 from streamlit.components.v1 import html
+from streamlit import components
 
 
 def app():
@@ -53,6 +54,7 @@ def list_item(api_base_file, i, item_name, item_type, file_name):
         if response.status_code == 200:
             presigned_url = json.loads(response.text)
             open_page(presigned_url)
+            st.toast("File '{}' downloaded".format(item_name))
         else:
             st.write("Failed to retrieve presigned URL")
     if col5.button("Delete", item_name+"1", type="primary"):
