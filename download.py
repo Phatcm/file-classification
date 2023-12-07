@@ -3,7 +3,8 @@ import requests
 import json
 import time
 import pandas as pd
-import webbrowser 
+from streamlit.components.v1 import html
+
 
 def app():
     api_base_file = "https://i52vmx81j2.execute-api.ap-northeast-1.amazonaws.com/prod/files"
@@ -51,7 +52,7 @@ def list_item(api_base_file, i, item_name, item_type, file_name):
         response = download_url(api_base_url, file_name)
         if response.status_code == 200:
             presigned_url = json.loads(response.text)
-            webbrowser.open(presigned_url, new=0, autoraise=True)
+            open_page(presigned_url)
         else:
             st.write("Failed to retrieve presigned URL")
     if col5.button("Delete", item_name+"1", type="primary"):
@@ -78,3 +79,11 @@ def delete_item(item_name, item_type, url):
     response = requests.delete(delete_url)
     
     return response
+
+def open_page(url):
+    open_script= """
+        <script type="text/javascript">
+            window.open('%s', '_blank').focus();
+        </script>
+    """ % (url)
+    html(open_script)
