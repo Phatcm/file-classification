@@ -3,7 +3,7 @@ import requests
 import json
 
 from streamlit_option_menu import option_menu
-import upload, download, delete
+import upload, download
 
 st.set_page_config(
     page_title = "My S3 Bucket",
@@ -22,7 +22,7 @@ class MultiApp:
         with st.sidebar:
             app = option_menu(
                 menu_title='Navigator ',
-                options=['Upload','Download','Delete'],
+                options=['Upload','Download'],
                 icons=['cloud-arrow-up','cloud-arrow-down','cloud-minus'],
                 menu_icon='cast',
                 default_index=0,
@@ -36,6 +36,4 @@ class MultiApp:
             upload.app()
         if app== "Download":
             download.app()
-        if app== "Delete":
-            delete.app()
     run()
