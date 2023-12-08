@@ -19,7 +19,7 @@ def app():
 
     
     #define column name:
-    colms = st.columns((1, 2, 2, 2, 2))
+    colms = st.columns((1, 5, 2, 2, 2))
     fields = ["№", 'Name', 'Type', "Download", "Delete"]
     for col, field_name in zip(colms, fields):
         # header
@@ -30,6 +30,7 @@ def app():
         item_name = item["FileName"]
         item_type = item["FileType"]
         file_name = item["FileType"]+"/"+item["FileName"]
+        
 
         #condition to show only search result:
         if text_search:
@@ -38,13 +39,13 @@ def app():
             content_list = desired_content['FileName'].tolist()
             for name in content_list:
                 if name == item_name:
-                    list_item(api_base_file, i, item_name, item_type, file_name)
+                        list_item(api_base_file, i, item_name, item_type, file_name)
         else:
-            list_item(api_base_file, i, item_name, item_type, file_name)
+                list_item(api_base_file, i, item_name, item_type, file_name)
                     
 def list_item(api_base_file, i, item_name, item_type, file_name):
             
-    col1, col2, col3, col4, col5 = st.columns((1, 2, 2, 2, 2))
+    col1, col2, col3, col4, col5 = st.columns((1, 5, 2, 2, 2))
     col1.write(i) #index
     col2.write(item_name) #File name
     col3.write(item_type) #File type
@@ -53,7 +54,9 @@ def list_item(api_base_file, i, item_name, item_type, file_name):
         response = download_url(api_base_url, file_name)
         if response.status_code == 200:
             presigned_url = json.loads(response.text)
-            open_page(presigned_url)
+            ph = st.empty()
+            with ph:
+                open_page(presigned_url)
             st.toast("File '{}' downloaded".format(item_name))
         else:
             st.write("Failed to retrieve presigned URL")
@@ -88,4 +91,4 @@ def open_page(url):
             window.open('%s', '_blank').focus();
         </script>
     """ % (url)
-    html(open_script)
+    st.components.v1.html(open_script, height=0, width=0)
