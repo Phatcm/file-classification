@@ -66,11 +66,14 @@ def list_item(api_base_file, i, item_name, item_type, file_name):
         response = download_url(api_base_url, file_name)
         if response.status_code == 200:
             presigned_url = json.loads(response.text)
-            response = requests.post("https://api-ssl.bitly.com/v4/shorten", json={"long_url": presigned_url}, headers={"Authorization": "443f586f22659c12c9e28ea87244b08dac018f80"})
-
-            # Extract the shortened URL from the API response
-            shortened_url = response.json()["link"]
-            qr_show(shortened_url)
+            
+            #call shorten link api
+            shorten_api = "https://ulvis.net/api.php"
+            api_url = "{}?url={}".format(shorten_api, presigned_url)
+            response = requests.post(api_url)
+            
+            # Call qrcode generate func
+            qr_show(response.text)
             
             
             
