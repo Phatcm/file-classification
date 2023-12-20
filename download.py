@@ -20,7 +20,7 @@ def app():
 
     
     #define column name:
-    colms = st.columns((1, 5, 2, 2, 2, 2))
+    colms = st.columns((1, 5, 3, 3, 3, 3))
     fields = ["№", 'Name', 'Type', "Download", "QRCode", "Delete File"]
     for col, field_name in zip(colms, fields):
         # header
@@ -46,7 +46,7 @@ def app():
                     
 def list_item(api_base_file, i, item_name, item_type, file_name):
             
-    col1, col2, col3, col4, col5, col6 = st.columns((1, 5, 2, 2, 2, 2))
+    col1, col2, col3, col4, col5, col6 = st.columns((1, 5, 3, 3, 3, 3))
     col1.write(i) #index
     col2.write(item_name) #File name
     col3.write(item_type) #File type
