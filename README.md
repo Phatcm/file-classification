@@ -1,7 +1,9 @@
 # File-classification
 End user upload files though front-end, lambda function act as back-end and handle file classification and organize it in s3 using presigned URL.
 
-![Screenshot 2023-12-09 215156](https://github.com/Phatcm/file-classification/assets/99520246/d7bb01aa-7a50-4d00-a571-e816cd53b26b)
+![Screenshot 2023-12-10 072023](https://github.com/Phatcm/file-classification/assets/99520246/c4eb4ec8-85fd-420d-995e-d4cc679c9028)
+![Screenshot 2023-12-10 072035](https://github.com/Phatcm/file-classification/assets/99520246/d9f0da60-cbd6-4986-a58c-e2db028a5c1f)
+
 
 ## Installation Guide
 Required: 
