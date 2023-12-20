@@ -5,7 +5,8 @@ import time
 import pandas as pd
 from streamlit.components.v1 import html
 from streamlit import components
-
+import qrcode
+import base64
 
 def app():
     api_base_file = "https://i52vmx81j2.execute-api.ap-northeast-1.amazonaws.com/prod/files"
@@ -19,8 +20,8 @@ def app():
 
     
     #define column name:
-    colms = st.columns((1, 5, 2, 2, 2))
-    fields = ["№", 'Name', 'Type', "Download", "Delete"]
+    colms = st.columns((1, 5, 2, 2, 2, 2))
+    fields = ["№", 'Name', 'Type', "Download", "QRCode", "Delete File"]
     for col, field_name in zip(colms, fields):
         # header
         col.write(field_name)
@@ -45,7 +46,7 @@ def app():
                     
 def list_item(api_base_file, i, item_name, item_type, file_name):
             
-    col1, col2, col3, col4, col5 = st.columns((1, 5, 2, 2, 2))
+    col1, col2, col3, col4, col5, col6 = st.columns((1, 5, 2, 2, 2, 2))
     col1.write(i) #index
     col2.write(item_name) #File name
     col3.write(item_type) #File type
@@ -60,7 +61,20 @@ def list_item(api_base_file, i, item_name, item_type, file_name):
             st.toast("File '{}' downloaded".format(item_name))
         else:
             st.write("Failed to retrieve presigned URL")
-    if col5.button("Delete", item_name+"1", type="primary"):
+    if col5.button("Generate", item_name+"1"):
+        api_base_url = "https://i52vmx81j2.execute-api.ap-northeast-1.amazonaws.com/prod/url"
+        response = download_url(api_base_url, file_name)
+        if response.status_code == 200:
+            presigned_url = json.loads(response.text)
+            response = requests.post("https://api-ssl.bitly.com/v4/shorten", json={"long_url": presigned_url}, headers={"Authorization": "443f586f22659c12c9e28ea87244b08dac018f80"})
+
+            # Extract the shortened URL from the API response
+            shortened_url = response.json()["link"]
+            qr_show(shortened_url)
+            
+            
+            
+    if col6.button("Delete", item_name+"2", type="primary"):
         response = delete_item(item_name, item_type, api_base_file)
         if response.status_code == 200:
             st.toast("You delete '"+item_name+"'")
@@ -68,6 +82,7 @@ def list_item(api_base_file, i, item_name, item_type, file_name):
             st.experimental_rerun()
         else:
             st.toast("Delete file failed")
+
 
 def download_url(api_base_url, file_name):
     download_url = "{}?download={}".format(api_base_url, file_name)
@@ -85,6 +100,13 @@ def delete_item(item_name, item_type, url):
     
     return response
 
+def generateQR(item_name, data):
+    qr = qrcode.QRCode(version=3, box_size=20, border=10, error_correction=qrcode.constants.ERROR_CORRECT_H)
+    qr.add_data(data)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white") 
+    return img
+
 def open_page(url):
     open_script= """
         <script type="text/javascript">
@@ -92,3 +114,26 @@ def open_page(url):
         </script>
     """ % (url)
     st.components.v1.html(open_script, height=0, width=0)
+    
+def qr_show(url):
+    html= """
+            <html>
+            <head>
+            <title>Generate QR Code</title>
+            <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+            </head>
+            <body>
+            <div id="qrcode"></div>
+
+            <script>
+                var url = '%s';
+                var qrcode = new QRCode(document.getElementById("qrcode"), {
+                text: url,
+                width: 130,
+                height: 130
+                });
+            </script>
+            </body>
+            </html>
+            """ % (url)
+    st.components.v1.html(html)
